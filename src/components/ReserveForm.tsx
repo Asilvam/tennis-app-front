@@ -189,7 +189,7 @@ const ReserveForm: React.FC = () => {
                 <div className="row">
                     <div className="col-sm-10 offset-sm-2">
                         <button type="submit" className="btn green darken-4">TRY RESERVE</button>
-                        <a href="/" className="btn green darken-4" style={{marginLeft: '30px'}}>Cancel</a>
+                        <a href="/" className="btn green darken-4" style={{marginLeft: '30px'}}>CANCEL</a>
                     </div>
                 </div>
             </form>

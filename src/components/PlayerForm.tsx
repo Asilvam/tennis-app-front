@@ -108,9 +108,8 @@ const PlayerForm: React.FC = () => {
                 </div>
                 {passwordError && <p style={{color: 'red'}}>{passwordError}</p>}
                 <div style={{marginTop: '15px'}}>
-                    <button type="submit" className="btn green darken-4">Generate Player
-                    </button>
-                    <a href="/" className="btn green darken-4" style={{marginLeft: '30px'}}>Cancel</a>
+                    <button type="submit" className="btn green darken-4">Generate Player</button>
+                    <a href="/" className="btn green darken-4" style={{marginLeft: '30px'}}>CANCEL</a>
                 </div>
             </form>
         </Fragment>
