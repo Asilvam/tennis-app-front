@@ -1,6 +1,8 @@
 import React, {useState, ChangeEvent, FormEvent, Fragment} from 'react';
 import axios from 'axios';
 import Swal from "sweetalert2";
+import { faSpinner} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 interface FormData {
     namePlayer: string;
@@ -19,6 +21,7 @@ const PlayerForm: React.FC = () => {
         pwd: '',
         retypePwd: ''
     };
+
     const [formData, setFormData] = useState<FormData>({
         namePlayer: '',
         email: '',
@@ -26,6 +29,7 @@ const PlayerForm: React.FC = () => {
         pwd: '',
         retypePwd: ''
     });
+    const [generateLoading, setGenerateLoading] = useState(false);
 
     const [emailError,
         setEmailError] = useState<string | null>(null);
@@ -59,6 +63,7 @@ const PlayerForm: React.FC = () => {
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        setGenerateLoading(true);
         if (!validateEmail(formData.email)) {
             setEmailError('Invalid email');
             return;
@@ -84,6 +89,7 @@ const PlayerForm: React.FC = () => {
             });
             console.error('Failed to submit form:', error);
         }
+        setGenerateLoading(false);
     };
 
     return (
@@ -131,7 +137,9 @@ const PlayerForm: React.FC = () => {
                 </div>
                 {passwordError && <p style={{color: 'red'}}>{passwordError}</p>}
                 <div style={{marginTop: '15px'}}>
-                    <button type="submit" className="btn green darken-4">Generate Player</button>
+                    <button type="submit" className="btn green darken-4" disabled={generateLoading}>
+                        {generateLoading && <FontAwesomeIcon icon={faSpinner} spin fixedWidth/>}Generate Player
+                    </button>
                     <a href="/" className="btn green darken-4" style={{marginLeft: '30px'}}>CANCEL</a>
                 </div>
             </form>
