@@ -2,7 +2,7 @@ import React, {useState, useEffect, FormEvent, Fragment, ChangeEventHandler} fro
 import axios from 'axios';
 
 interface ReserveFormData {
-    court: String;
+    court: string;
     player1: string;
     player2: string;
     dateToPlay: Date;
@@ -112,12 +112,12 @@ const ReserveForm: React.FC = () => {
                     <label className="col-sm-2 col-form-label">Court:</label>
                     <div className="col-sm-10">
                         <select
-                            value={String(formData.court)}
+                            value={formData.court}
                             onChange={handleCourtChange}
                             className="browser-default"
                             required
                         >
-                            <option value="" disabled>Select Court Number</option>
+                            <option value="" disabled>Select Court</option>
                             {courtList.map(court => (
                                 <option key={court} value={court}>{court}</option>
                             ))}
