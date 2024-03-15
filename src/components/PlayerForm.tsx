@@ -11,6 +11,14 @@ interface FormData {
 }
 
 const PlayerForm: React.FC = () => {
+
+    const initialFormData = {
+        namePlayer: '',
+        celular: '',
+        email: '',
+        pwd: '',
+        retypePwd: ''
+    };
     const [formData, setFormData] = useState<FormData>({
         namePlayer: '',
         email: '',
@@ -45,6 +53,10 @@ const PlayerForm: React.FC = () => {
         return true;
     };
 
+    const clearForm = () => {
+        setFormData(initialFormData);
+    };
+
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (!validateEmail(formData.email)) {
@@ -63,6 +75,7 @@ const PlayerForm: React.FC = () => {
                 icon: 'success',
                 title: 'Player created successfully!',
             });
+            clearForm();
         } catch (error) {
             Swal.fire({
                 icon: 'error',
