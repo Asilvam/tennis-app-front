@@ -1,5 +1,6 @@
 import React, {useState, useEffect, FormEvent, Fragment, ChangeEventHandler} from 'react';
 import axios from 'axios';
+import Swal from "sweetalert2";
 
 interface ReserveFormData {
     court: string;
@@ -102,7 +103,10 @@ const ReserveForm: React.FC = () => {
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log('Form submitted:', formData);
+        Swal.fire({
+            icon: 'success',
+            title: 'be quiet!'
+        });
     };
 
     return (

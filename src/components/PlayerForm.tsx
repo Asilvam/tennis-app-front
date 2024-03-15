@@ -1,5 +1,6 @@
 import React, {useState, ChangeEvent, FormEvent, Fragment} from 'react';
 import axios from 'axios';
+import Swal from "sweetalert2";
 
 interface FormData {
     namePlayer: string;
@@ -58,7 +59,16 @@ const PlayerForm: React.FC = () => {
         try {
             const response = await axios.post<any>('https://tennis-app-backend-n8w2.onrender.com/register', formDataToSend);
             console.log('Form submitted successfully:', response.data);
+            Swal.fire({
+                icon: 'success',
+                title: 'Player created successfully!',
+            });
         } catch (error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Something went wrong!',
+            });
             console.error('Failed to submit form:', error);
         }
     };
