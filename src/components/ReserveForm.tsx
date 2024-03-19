@@ -3,6 +3,7 @@ import axios from 'axios';
 import Swal from "sweetalert2";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faSpinner} from "@fortawesome/free-solid-svg-icons";
+import moment from "moment";
 
 interface ReserveFormData {
     court: string;
@@ -22,13 +23,9 @@ const ReserveForm: React.FC = () => {
         turn: ''
     };
 
-    const [formData, setFormData] = useState<ReserveFormData>({
-        court: '',
-        player1: '',
-        player2: '',
-        dateToPlay: new Date(),
-        turn: ''
-    });
+    const [formData, setFormData] = useState<ReserveFormData>(
+        initialFormData
+    );
     const [generateLoading, setGenerateLoading] = useState(false);
     const [playerList, setPlayerList] = useState<string[]>([]);
     const [courtList, setCourtList] = useState<string[]>([]);
@@ -74,52 +71,65 @@ const ReserveForm: React.FC = () => {
         }
     };
 
-    const handleCourtChange = (selectedOption: any) => {
+    const handleCourtChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        const selectedCourt = event.target.value;
         setFormData(prevState => ({
             ...prevState,
-            court: selectedOption.value
+            court: selectedCourt
         }));
+        console.log('Selected court:', selectedCourt);
     };
 
-    const handleTurnChange = (selectedOption: any) => {
+
+    const handleTurnChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        const selectedTurn = event.target.value;
         setFormData(prevState => ({
             ...prevState,
-            turn: selectedOption.value
+            turn: selectedTurn
         }));
+        console.log('Selected turn:', selectedTurn);
     };
 
-    const handlePlayer1Change = (selectedOption: any) => {
-        setFormData(prevState => ({
-            ...prevState,
-            player1: selectedOption.value
-        }));
+    const handlePlayer1Change = (event: React.ChangeEvent<HTMLSelectElement>) => {
+       const selectedPlayer = event.target.value;
+            setFormData(prevState => ({
+                ...prevState,
+                player1: selectedPlayer
+            }));
+            console.log('Selected player 1:', selectedPlayer);
     };
 
-    const handlePlayer2Change = (selectedOption: any) => {
+    const handlePlayer2Change = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        const selectedPlayer = event.target.value;
         setFormData(prevState => ({
             ...prevState,
-            player2: selectedOption.value
+            player2: selectedPlayer
         }));
+        console.log('Selected player 2:', selectedPlayer);
     };
 
     const handleDateChange: ChangeEventHandler<HTMLInputElement> = (event) => {
-        const { value } = event.target;
-        const formattedDate = new Date(value);
+        const {value} = event.target;
+        // const formattedDate = new Date(value);
+        const formattedDate = moment(value).format('YYYY-MM-DD');
+        const dateObject = new Date(formattedDate);
         setFormData(prevState => ({
             ...prevState,
-            dateToPlay: formattedDate
+            dateToPlay: dateObject
         }));
+        console.log('Selected date:', formattedDate);
     };
 
     const clearForm = () => {
         setFormData(initialFormData);
     };
 
-    const handleSubmit = async  (e: FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setGenerateLoading(true);
         try {
-            const response = await axios.post<any>('https://tennis-app-backend-n8w2.onrender.com/court-reserves', formData);
+            console.log('Form data:', formData);
+            const response = await axios.post<any>('http://localhost:3500/court-reserves', formData);
             console.log('Form submitted successfully:', response.data);
             Swal.fire({
                 icon: 'success',
@@ -221,7 +231,8 @@ const ReserveForm: React.FC = () => {
                 <div className="row">
                     <div className="col-sm-10 offset-sm-2">
                         <button type="submit" className="btn green darken-4" disabled={generateLoading}>
-                            {generateLoading && <FontAwesomeIcon icon={faSpinner} spin fixedWidth/>}TRY RESERVE</button>
+                            {generateLoading && <FontAwesomeIcon icon={faSpinner} spin fixedWidth/>}TRY RESERVE
+                        </button>
                         <a href="/" className="btn green darken-4" style={{marginLeft: '30px'}}>CANCEL</a>
                     </div>
                 </div>
