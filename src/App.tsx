@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import './App.css';
 import PlayerForm from "./components/PlayerForm";
 import ReserveForm from "./components/ReserveForm";
+import ReserveListForm from "./components/ReserveListForm";
 
 function App() {
     const [selectedComponent, setSelectedComponent] = useState('');
@@ -16,6 +17,8 @@ function App() {
                 return <ReserveForm/>;
             case 'PlayerForm':
                 return <PlayerForm/>;
+            case 'ReserveListForm':
+                return <ReserveListForm/>;
             // Add cases for other components here
             default:
                 return null;
@@ -34,7 +37,7 @@ function App() {
             <div className="container">
                 <div className="row center-align">
                     <div className="one-half column">
-                        <div className="row" style={{marginTop:'20px'}}>
+                        <div className="row" style={{marginTop: '20px'}}>
                             <button className="btn btn-custom" onClick={() => handleButtonClick('ReserveForm')}>Reserve
                                 Form
                             </button>
@@ -42,6 +45,11 @@ function App() {
                         <div className="row">
                             <button className="btn btn-custom" onClick={() => handleButtonClick('PlayerForm')}>Player
                                 Form
+                            </button>
+                        </div>
+                        <div className="row">
+                            <button className="btn btn-custom" onClick={() => handleButtonClick('ReserveListForm')}>List
+                                Reserve
                             </button>
                         </div>
                         {/* Add buttons for other components here */}

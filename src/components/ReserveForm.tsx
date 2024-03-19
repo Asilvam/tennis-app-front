@@ -1,6 +1,9 @@
 import React, {useState, useEffect, FormEvent, Fragment, ChangeEventHandler} from 'react';
 import axios from 'axios';
 import Swal from "sweetalert2";
+import Moment from 'react-moment';
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faSpinner} from "@fortawesome/free-solid-svg-icons";
 
 interface ReserveFormData {
     court: string;
@@ -11,6 +14,15 @@ interface ReserveFormData {
 }
 
 const ReserveForm: React.FC = () => {
+
+    const initialFormData = {
+        court: '',
+        player1: '',
+        player2: '',
+        dateToPlay: new Date(),
+        turn: ''
+    };
+
     const [formData, setFormData] = useState<ReserveFormData>({
         court: '',
         player1: '',
@@ -18,6 +30,7 @@ const ReserveForm: React.FC = () => {
         dateToPlay: new Date(),
         turn: ''
     });
+    const [generateLoading, setGenerateLoading] = useState(false);
     const [playerList, setPlayerList] = useState<string[]>([]);
     const [courtList, setCourtList] = useState<string[]>([]);
     const [turnList, setTurnList] = useState<string[]>([]);
@@ -92,21 +105,37 @@ const ReserveForm: React.FC = () => {
 
     const handleDateChange: ChangeEventHandler<HTMLInputElement> = (event) => {
         const { value } = event.target;
-        // Convert the string value to a Date object if needed
-        const date = new Date(value);
+        const formattedDate = new Date(value);
         setFormData(prevState => ({
             ...prevState,
-            dateToPlay: date
+            dateToPlay: formattedDate
         }));
     };
 
+    const clearForm = () => {
+        setFormData(initialFormData);
+    };
 
-    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async  (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        Swal.fire({
-            icon: 'success',
-            title: 'be quiet!'
-        });
+        setGenerateLoading(true);
+        try {
+            const response = await axios.post<any>('https://tennis-app-backend-n8w2.onrender.com/court-reserves', formData);
+            console.log('Form submitted successfully:', response.data);
+            Swal.fire({
+                icon: 'success',
+                title: 'reserve created successfully!',
+            });
+            clearForm();
+        } catch (error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Something went wrong!',
+            });
+            console.error('Failed to submit form:', error);
+        }
+        setGenerateLoading(false);
     };
 
     return (
@@ -192,7 +221,8 @@ const ReserveForm: React.FC = () => {
                 </div>
                 <div className="row">
                     <div className="col-sm-10 offset-sm-2">
-                        <button type="submit" className="btn green darken-4">TRY RESERVE</button>
+                        <button type="submit" className="btn green darken-4" disabled={generateLoading}>
+                            {generateLoading && <FontAwesomeIcon icon={faSpinner} spin fixedWidth/>}TRY RESERVE</button>
                         <a href="/" className="btn green darken-4" style={{marginLeft: '30px'}}>CANCEL</a>
                     </div>
                 </div>
