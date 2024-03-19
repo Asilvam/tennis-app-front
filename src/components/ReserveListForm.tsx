@@ -14,7 +14,7 @@ const ReserveListForm: React.FC = () => {
     const [data, setData] = useState<Reservation[]>([]);
 
     useEffect(() => {
-        axios.get<Reservation[]>('https://tennis-app-backend-n8w2.onrender.com/court-reserves')
+        axios.get<Reservation[]>('http://localhost:3500/court-reserves')
             .then(response => {
                 setData(response.data);
                 console.log('Data:', response.data);
