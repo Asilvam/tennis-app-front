@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTable, Column } from 'react-table';
 import axios from 'axios';
+import moment from "moment";
 
 interface Reservation {
     player1: string;
@@ -16,8 +17,11 @@ const ReserveListForm: React.FC = () => {
     useEffect(() => {
         axios.get<Reservation[]>('https://tennis-app-backend-n8w2.onrender.com/court-reserves')
             .then(response => {
-                setData(response.data);
-                console.log('Data:', response.data);
+                const formattedData = response.data.map(item => ({
+                    ...item,
+                    dateToPlay: moment(item.dateToPlay).format('YYYY-MM-DD')
+                }));
+                setData(formattedData);
             })
             .catch(error => {
                 console.error('Error fetching data:', error);
