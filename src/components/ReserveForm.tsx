@@ -129,7 +129,7 @@ const ReserveForm: React.FC = () => {
         setGenerateLoading(true);
         try {
             console.log('Form data:', formData);
-            const response = await axios.post<any>('http://localhost:3500/court-reserves', formData);
+            const response = await axios.post<any>('https://tennis-app-backend-n8w2.onrender.com/court-reserves', formData);
             console.log('Form submitted successfully:', response.data);
             Swal.fire({
                 icon: 'success',
@@ -238,8 +238,6 @@ const ReserveForm: React.FC = () => {
                 </div>
             </form>
         </Fragment>
-
-
     );
 };
 
