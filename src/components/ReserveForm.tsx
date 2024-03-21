@@ -138,6 +138,9 @@ const ReserveForm: React.FC = () => {
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setGenerateLoading(true);
+        if (!validatePlayers()) {
+            return;
+        }
         try {
             console.log('Form data:', formData);
             const response = await axios.post<any>('https://tennis-app-backend-n8w2.onrender.com/court-reserves', formData);
