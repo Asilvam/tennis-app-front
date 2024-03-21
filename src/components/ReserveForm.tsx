@@ -37,11 +37,11 @@ const ReserveForm: React.FC = () => {
     const today = new Date();
     const tomorrow = new Date(today);
     tomorrow.setDate(tomorrow.getDate() + 2);
-
     useEffect(() => {
         fetchTurnsOptions();
         fetchCourtOptions();
         fetchPlayerList();
+        //eslint-disable-next-line
     }, []);
 
     const fetchCourtOptions = async () => {
@@ -94,12 +94,12 @@ const ReserveForm: React.FC = () => {
     };
 
     const handlePlayer1Change = (event: React.ChangeEvent<HTMLSelectElement>) => {
-       const selectedPlayer = event.target.value;
-            setFormData(prevState => ({
-                ...prevState,
-                player1: selectedPlayer
-            }));
-            console.log('Selected player 1:', selectedPlayer);
+        const selectedPlayer = event.target.value;
+        setFormData(prevState => ({
+            ...prevState,
+            player1: selectedPlayer
+        }));
+        console.log('Selected player 1:', selectedPlayer);
     };
 
     const handlePlayer2Change = (event: React.ChangeEvent<HTMLSelectElement>) => {

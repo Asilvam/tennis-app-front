@@ -28,6 +28,7 @@ const ReserveListForm: React.FC = () => {
             .catch(error => {
                 console.error('Error fetching data:', error);
             });
+        //eslint-disable-next-line
     }, []);
 
     const columns: Column<Reservation>[] = React.useMemo(
