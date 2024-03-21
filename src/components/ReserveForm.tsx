@@ -30,6 +30,7 @@ const ReserveForm: React.FC = () => {
     const [playerList, setPlayerList] = useState<string[]>([]);
     const [courtList, setCourtList] = useState<string[]>([]);
     const [turnList, setTurnList] = useState<string[]>([]);
+    const [playerError, setPlayerError] = useState<string | null>(null);
 
     const today = new Date();
     const tomorrow = new Date(today);
@@ -113,11 +114,21 @@ const ReserveForm: React.FC = () => {
         // const formattedDate = new Date(value);
         const formattedDate = moment(value).format('YYYY-MM-DD');
         const dateObject = new Date(formattedDate);
+        console.log('Date object is:', typeof (dateObject));
         setFormData(prevState => ({
             ...prevState,
             dateToPlay: dateObject
         }));
         console.log('Selected date:', formattedDate);
+    };
+
+    const validatePlayers = (): boolean => {
+        if (formData.player1 === formData.player2) {
+            setPlayerError('Error selecting players');
+            return false;
+        }
+        setPlayerError(null);
+        return true;
     };
 
     const clearForm = () => {
@@ -228,6 +239,7 @@ const ReserveForm: React.FC = () => {
                         </select>
                     </div>
                 </div>
+                {playerError && <p style={{color: 'red'}}>{playerError}</p>}
                 <div className="row">
                     <div className="col-sm-10 offset-sm-2">
                         <button type="submit" className="btn green darken-4" disabled={generateLoading}>
