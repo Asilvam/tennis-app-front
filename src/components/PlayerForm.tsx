@@ -14,6 +14,8 @@ interface FormData {
 
 const PlayerForm: React.FC = () => {
 
+    const apiUrl = process.env.REACT_APP_API_URL;
+
     const initialFormData = {
         namePlayer: '',
         celular: '',
@@ -74,7 +76,7 @@ const PlayerForm: React.FC = () => {
         const formDataToSend = (({retypePwd, ...rest}) => rest)(formData);
         setEmailError(null);
         try {
-            const response = await axios.post<any>('https://tennis-app-backend-n8w2.onrender.com/register', formDataToSend);
+            const response = await axios.post<ResponseType>(`${apiUrl}/register`, formDataToSend);
             console.log('Form submitted successfully:', response.data);
             Swal.fire({
                 icon: 'success',

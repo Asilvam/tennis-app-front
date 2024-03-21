@@ -14,8 +14,10 @@ interface Reservation {
 const ReserveListForm: React.FC = () => {
     const [data, setData] = useState<Reservation[]>([]);
 
+    const apiUrl = process.env.REACT_APP_API_URL;
+
     useEffect(() => {
-        axios.get<Reservation[]>('https://tennis-app-backend-n8w2.onrender.com/court-reserves')
+        axios.get<Reservation[]>(`${apiUrl}/court-reserves`)
             .then(response => {
                 const formattedData = response.data.map(item => ({
                     ...item,

@@ -15,6 +15,8 @@ interface ReserveFormData {
 
 const ReserveForm: React.FC = () => {
 
+    const apiUrl = process.env.REACT_APP_API_URL;
+
     const initialFormData = {
         court: '',
         player1: '',
@@ -44,7 +46,7 @@ const ReserveForm: React.FC = () => {
 
     const fetchCourtOptions = async () => {
         try {
-            const response = await axios.get('https://tennis-app-backend-n8w2.onrender.com/court/courts');
+            const response = await axios.get(`${apiUrl}/court/courts`);
             console.log('Court List:', response.data);
             setCourtList(response.data);
         } catch (error) {
@@ -54,7 +56,7 @@ const ReserveForm: React.FC = () => {
 
     const fetchTurnsOptions = async () => {
         try {
-            const response = await axios.get('https://tennis-app-backend-n8w2.onrender.com/turn/turns');
+            const response = await axios.get(`${apiUrl}/turn/turns`);
             console.log('turn List:', response.data);
             setTurnList(response.data);
         } catch (error) {
@@ -64,7 +66,7 @@ const ReserveForm: React.FC = () => {
 
     const fetchPlayerList = async () => {
         try {
-            const response = await axios.get('https://tennis-app-backend-n8w2.onrender.com/register/names');
+            const response = await axios.get(`${apiUrl}/register/names`);
             console.log('Player list:', response.data);
             setPlayerList(response.data);
         } catch (error) {
@@ -143,7 +145,7 @@ const ReserveForm: React.FC = () => {
         }
         try {
             console.log('Form data:', formData);
-            const response = await axios.post<any>('https://tennis-app-backend-n8w2.onrender.com/court-reserves', formData);
+            const response = await axios.post<any>(`${apiUrl}/court-reserves`, formData);
             console.log('Form submitted successfully:', response.data);
             Swal.fire({
                 icon: 'success',
