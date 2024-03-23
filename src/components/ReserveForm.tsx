@@ -146,19 +146,25 @@ const ReserveForm: React.FC = () => {
         try {
             console.log('Form data:', formData);
             const response = await axios.post<any>(`${apiUrl}/court-reserves`, formData);
-            console.log('Form submitted successfully:', response.data);
-            Swal.fire({
-                icon: 'success',
-                title: 'reserve created successfully!',
-            });
+            if (!response.data) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Court reservation already exists!',
+                });
+            } else {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'reserve created successfully!',
+                });
+            }
             clearForm();
-        } catch (error) {
+        } catch (error: any) {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
                 text: 'Something went wrong!',
             });
-            console.error('Failed to submit form:', error);
         }
         setGenerateLoading(false);
     };
