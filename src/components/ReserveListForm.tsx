@@ -19,14 +19,20 @@ const ReserveListForm: React.FC = () => {
         const fetchData = async () => {
             try {
                 const response = await axios.get<Reservation[]>(`${apiUrl}/court-reserves`);
-                const formattedData = response.data.map(item => ({
-                    ...item,
-                    dateToPlay: moment(item.dateToPlay).format('YYYY-MM-DD')
-                }));
-                setData(formattedData);
+                if (response.data.length === 0) {
+                    console.log('No data found.');
+                    // Handle the case where response is empty
+                } else {
+                    const formattedData = response.data.map(item => ({
+                        ...item,
+                        dateToPlay: moment(item.dateToPlay).format('YYYY-MM-DD')
+                    }));
+                    setData(formattedData);
+                }
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
+
         };
         fetchData();
     }, [apiUrl]);
