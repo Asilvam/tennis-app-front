@@ -21,7 +21,6 @@ const ReserveListForm: React.FC = () => {
                 const response = await axios.get<Reservation[]>(`${apiUrl}/court-reserves`);
                 if (response.data.length === 0) {
                     console.log('No data found.');
-                    // Handle the case where response is empty
                 } else {
                     const formattedData = response.data.map(item => ({
                         ...item,
@@ -32,10 +31,10 @@ const ReserveListForm: React.FC = () => {
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
-
         };
         fetchData();
-    }, [apiUrl]);
+        //eslint-disable-next-line
+    }, []);
 
 
     const columns: Column<Reservation>[] = React.useMemo(
