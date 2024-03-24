@@ -9,7 +9,7 @@ interface ReserveFormData {
     court: string;
     player1: string;
     player2: string;
-    dateToPlay: Date;
+    dateToPlay: string;
     turn: string;
 }
 
@@ -21,7 +21,7 @@ const ReserveForm: React.FC = () => {
         court: '',
         player1: '',
         player2: '',
-        dateToPlay: new Date(),
+        dateToPlay: moment().format('YYYY-MM-DD'),
         turn: ''
     };
 
@@ -47,7 +47,7 @@ const ReserveForm: React.FC = () => {
     const fetchCourtOptions = async () => {
         try {
             const response = await axios.get(`${apiUrl}/court/courts`);
-            console.log('Court List:', response.data);
+            // console.log('Court List:', response.data);
             setCourtList(response.data);
         } catch (error) {
             console.error('Error fetching court number options:', error);
@@ -57,7 +57,7 @@ const ReserveForm: React.FC = () => {
     const fetchTurnsOptions = async () => {
         try {
             const response = await axios.get(`${apiUrl}/turn/turns`);
-            console.log('turn List:', response.data);
+            // console.log('turn List:', response.data);
             setTurnList(response.data);
         } catch (error) {
             console.error('Error fetching court number options:', error);
@@ -67,7 +67,7 @@ const ReserveForm: React.FC = () => {
     const fetchPlayerList = async () => {
         try {
             const response = await axios.get(`${apiUrl}/register/names`);
-            console.log('Player list:', response.data);
+            // console.log('Player list:', response.data);
             setPlayerList(response.data);
         } catch (error) {
             console.error('Error fetching player list:', error);
@@ -80,7 +80,7 @@ const ReserveForm: React.FC = () => {
             ...prevState,
             court: selectedCourt
         }));
-        console.log('Selected court:', selectedCourt);
+        // console.log('Selected court:', selectedCourt);
     };
 
 
@@ -115,11 +115,10 @@ const ReserveForm: React.FC = () => {
         const {value} = event.target;
         // const formattedDate = new Date(value);
         const formattedDate = moment(value).format('YYYY-MM-DD');
-        const dateObject = new Date(formattedDate);
-        console.log('Date object is:', typeof (dateObject));
+        // const dateObject = new Date(formattedDate);
         setFormData(prevState => ({
             ...prevState,
-            dateToPlay: dateObject
+            dateToPlay: formattedDate
         }));
         console.log('Selected date:', formattedDate);
     };
@@ -225,7 +224,7 @@ const ReserveForm: React.FC = () => {
                     <div className="col-sm-10">
                         <input
                             type="date"
-                            value={formData.dateToPlay.toISOString().split('T')[0]}
+                            value={formData.dateToPlay}
                             onChange={handleDateChange}
                             className="form-control"
                             min={today.toISOString().split('T')[0]} // Set minimum date to today

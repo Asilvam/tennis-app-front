@@ -13,23 +13,24 @@ interface Reservation {
 
 const ReserveListForm: React.FC = () => {
     const [data, setData] = useState<Reservation[]>([]);
-
     const apiUrl = process.env.REACT_APP_API_URL;
 
     useEffect(() => {
-        axios.get<Reservation[]>(`${apiUrl}/court-reserves`)
-            .then(response => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.get<Reservation[]>(`${apiUrl}/court-reserves`);
                 const formattedData = response.data.map(item => ({
                     ...item,
                     dateToPlay: moment(item.dateToPlay).format('YYYY-MM-DD')
                 }));
                 setData(formattedData);
-            })
-            .catch(error => {
+            } catch (error) {
                 console.error('Error fetching data:', error);
-            });
-        //eslint-disable-next-line
-    }, []);
+            }
+        };
+        fetchData();
+    }, [apiUrl]);
+
 
     const columns: Column<Reservation>[] = React.useMemo(
         () => [
