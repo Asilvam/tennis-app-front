@@ -1,7 +1,7 @@
-import React, {useState, ChangeEvent, FormEvent, Fragment} from 'react';
+import React, {useState, ChangeEvent, FormEvent, Fragment, useRef} from 'react';
 import axios from 'axios';
 import Swal from "sweetalert2";
-import { faSpinner} from "@fortawesome/free-solid-svg-icons";
+import {faSpinner} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 interface FormData {
@@ -13,10 +13,8 @@ interface FormData {
 }
 
 const PlayerForm: React.FC = () => {
-
     const apiUrl = process.env.REACT_APP_API_URL;
-
-    const initialFormData = {
+    const initialFormData: FormData = {
         namePlayer: '',
         celular: '',
         email: '',
@@ -24,27 +22,26 @@ const PlayerForm: React.FC = () => {
         retypePwd: ''
     };
 
-    const [formData, setFormData] = useState<FormData>({
-        namePlayer: '',
-        email: '',
-        celular: '',
-        pwd: '',
-        retypePwd: ''
-    });
+    const [formData, setFormData] = useState<FormData>(initialFormData);
     const [generateLoading, setGenerateLoading] = useState(false);
-
-    const [emailError,
-        setEmailError] = useState<string | null>(null);
+    const [emailError, setEmailError] = useState<string | null>(null);
     const [passwordError, setPasswordError] = useState<string | null>(null);
+    const emailInputRef = useRef<HTMLInputElement>(null);
+    const passwordInputRef = useRef<HTMLInputElement>(null);
+    const isPasswordFocused = useRef(false);
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-        const {name, value} = e.target;
+        const { name, value } = e.target;
         setFormData(prevState => ({
             ...prevState,
             [name]: value
         }));
+        // Clear error messages when focusing on input fields
+        setEmailError(null);
+        if (passwordInputRef.current && isPasswordFocused.current) {
+            setPasswordError(null);
+        }
     };
-
     const validateEmail = (email: string): boolean => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailRegex.test(email);
@@ -52,7 +49,15 @@ const PlayerForm: React.FC = () => {
 
     const validatePassword = (): boolean => {
         if (formData.pwd !== formData.retypePwd) {
-            setPasswordError('Passwords do not match');
+            setPasswordError('Passwords do not match!');
+            setFormData(prevState => ({
+                ...prevState,
+                pwd: '',
+                retypePwd: ''
+            }));
+            if (passwordInputRef.current) {
+                passwordInputRef.current.focus();
+            }
             return false;
         }
         setPasswordError(null);
@@ -68,16 +73,30 @@ const PlayerForm: React.FC = () => {
         setGenerateLoading(true);
         if (!validateEmail(formData.email)) {
             setEmailError('Invalid email');
+            if (emailInputRef.current) {
+                emailInputRef.current.focus();
+            }
+            setGenerateLoading(false);
             return;
         }
         if (!validatePassword()) {
+            setGenerateLoading(false);
             return;
         }
         const formDataToSend = (({retypePwd, ...rest}) => rest)(formData);
         setEmailError(null);
         try {
-            const response = await axios.post<ResponseType>(`${apiUrl}/register`, formDataToSend);
-            console.log('Form submitted successfully:', response.data);
+            const response = await axios.post(`${apiUrl}/register`, formDataToSend);
+            console.log('Response:', response.data);
+            if (response.data.status === 400) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: response.data.message,
+                });
+                setGenerateLoading(false);
+                return;
+            }
             Swal.fire({
                 icon: 'success',
                 title: 'Player created successfully!',
@@ -94,6 +113,7 @@ const PlayerForm: React.FC = () => {
         setGenerateLoading(false);
     };
 
+
     return (
         <Fragment>
             <form onSubmit={handleSubmit}>
@@ -106,7 +126,7 @@ const PlayerForm: React.FC = () => {
                            value={formData.namePlayer}
                            onChange={handleChange}
                            autoFocus
-                           required/>
+                           required />
                     <label>Cellular </label>
                     <input type="text"
                            name="celular"
@@ -114,7 +134,7 @@ const PlayerForm: React.FC = () => {
                            placeholder="+56912345678"
                            onChange={handleChange}
                            value={formData.celular}
-                           required/>
+                           required />
                     <label>Email:</label>
                     <input type="email"
                            name="email"
@@ -122,27 +142,29 @@ const PlayerForm: React.FC = () => {
                            placeholder="Email"
                            value={formData.email}
                            onChange={handleChange}
-                           required/>
-                    {emailError && <p style={{color: 'red'}}>{emailError}</p>}
+                           ref={emailInputRef}
+                           required />
+                    {emailError && <p style={{ color: 'red' }}>{emailError}</p>}
                     <label>Password:</label>
                     <input type={'password'}
                            name="pwd"
                            value={formData.pwd}
                            onChange={handleChange}
-                           required/>
+                           ref={passwordInputRef}
+                           required />
                     <label>Retype Password:</label>
                     <input type={'password'}
                            name="retypePwd"
                            value={formData.retypePwd}
                            onChange={handleChange}
-                           required/>
+                           required />
+                    {passwordError && <p style={{ color: 'red' }}>{passwordError}</p>}
                 </div>
-                {passwordError && <p style={{color: 'red'}}>{passwordError}</p>}
-                <div style={{marginTop: '15px'}}>
+                <div style={{ marginTop: '15px' }}>
                     <button type="submit" className="btn green darken-4" disabled={generateLoading}>
-                        {generateLoading && <FontAwesomeIcon icon={faSpinner} spin fixedWidth/>}Generate Player
+                        {generateLoading && <FontAwesomeIcon icon={faSpinner} spin fixedWidth />}Generate Player
                     </button>
-                    <a href="/" className="btn green darken-4" style={{marginLeft: '30px'}}>CANCEL</a>
+                    <a href="/" className="btn green darken-4" style={{ marginLeft: '30px' }}>CANCEL</a>
                 </div>
             </form>
         </Fragment>
