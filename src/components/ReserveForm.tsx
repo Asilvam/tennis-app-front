@@ -145,16 +145,19 @@ const ReserveForm: React.FC = () => {
         try {
             console.log('Form data:', formData);
             const response = await axios.post<any>(`${apiUrl}/court-reserves`, formData);
-            if (!response.data) {
+            console.log('Response:', response);
+            const {message} = response.data;
+            if (response.data.statusCode===400) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
-                    text: 'Court reservation already exists!',
+                    text: message
                 });
             } else {
                 Swal.fire({
                     icon: 'success',
-                    title: 'reserve created successfully!',
+                    title: 'Success!',
+                    text: message
                 });
             }
             clearForm();
